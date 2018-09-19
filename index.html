@@ -107,6 +107,10 @@
       var triangleVertexColorBuffer
       var squareVertexPositionBuffer
       var squareVertexColorBuffer
+
+      var numb
+      var numb2
+
       function initBuffers() {
         // Triangle Position
         triangleVertexPositionBuffer = gl.createBuffer()
@@ -132,7 +136,7 @@
         -0.4, -0.6, 0.0
         ]
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
-        var numb = vertices.length/3
+        numb = vertices.length/3
         triangleVertexPositionBuffer.itemSize = 3
         triangleVertexPositionBuffer.numItems = numb
         // Triangle Color
@@ -140,7 +144,7 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer)
         var color = []
         for (var i=0; i < numb; i++) {
-            color = color.concat([0.5, 0.5, 1.0, 1.0]);
+            color = color.concat([Math.random(),Math.random(),Math.random(), 1.0]);
         }
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(color), gl.STATIC_DRAW)
         triangleVertexColorBuffer.itemSize = 4
@@ -168,16 +172,16 @@
           -0.6, -0.6, 0.0,
           1.0, -0.6, 0.0
         ]
-        var numb2 = vertices.length/3
+        numb2 = vertices.length/3
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
         squareVertexPositionBuffer.itemSize = 3
         squareVertexPositionBuffer.numItems = numb2
         // Square Color
         squareVertexColorBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
-        colors = [];
+        var colors = [];
         for (var i=0; i < numb2; i++) {
-            colors = colors.concat([0.5, 0.5, 1.0, 1.0]);
+            colors = colors.concat([Math.random(),Math.random(),Math.random(), 1.0]);
         }
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
         squareVertexColorBuffer.itemSize = 4;
@@ -185,7 +189,33 @@
       }
       var rTri = 0
       var rSquare = 0
+
+      var temp
+      var last = -1
+      function changeColor()
+      {
+        temp = Math.floor((rTri%360)/30)
+        if(temp != last )
+        {
+          last = temp 
+          gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer)
+          var color = []
+          for (var i=0; i < numb; i++) {
+              color = color.concat([Math.random(),Math.random(),Math.random(), 1.0]);
+          }
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(color), gl.STATIC_DRAW)
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+          var colors = [];
+          for (var i=0; i < numb2; i++) {
+              colors = colors.concat([Math.random(),Math.random(),Math.random(), 1.0]);
+          }
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+        }
+      }
+
       function drawScene() {
+        changeColor()
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         mat4.perspective(pMatrix, glMatrix.toRadian(45), gl.viewportWidth / gl.viewportHeight, 0.1, 100.0)
